@@ -1,14 +1,30 @@
-import {Application} from './application';
+// Copyright IBM Corp. and LoopBack contributors 2018,2020. All Rights Reserved.
+// Node module: @loopback/example-hello-world
+// This file is licensed under the MIT License.
+// License text available at https://opensource.org/licenses/MIT
 
-export async function main() {
-  const app = new Application();
-  await app.boot();
+import {ApplicationConfig, HelloWorldApplication} from './application';
+
+export async function main(config: ApplicationConfig) {
+  const app = new HelloWorldApplication();
   await app.start();
-  console.log(`Application is running at http://127.0.0.1:3000`);
+  return app;
 }
 
-main().catch(err => {
-  console.error('Cannot start the application.', err);
-  process.exit(1);
-});
-
+if (require.main === module) {
+  // Run the application
+  const config = {
+    rest: {
+      port: +(process.env.PORT ?? 3000),
+      host: process.env.HOST ?? 'localhost',
+      openApiSpec: {
+        // useful when used with OpenAPI-to-GraphQL to locate your application
+        setServersFromRequest: true,
+      },
+    },
+  };
+  main(config).catch(err => {
+    console.error('Cannot start the application.', err);
+    process.exit(1);
+  });
+}

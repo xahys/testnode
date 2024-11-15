@@ -1,16 +1,33 @@
-import {ApplicationConfig} from '@loopback/core';
-import {RestApplication} from '@loopback/rest';
-import {RestExplorerBindings} from '@loopback/rest-explorer';
-import {PingController} from './controllers/ping.controller';
+// Copyright IBM Corp. and LoopBack contributors 2018,2020. All Rights Reserved.
+// Node module: @loopback/example-hello-world
+// This file is licensed under the MIT License.
+// License text available at https://opensource.org/licenses/MIT
 
-export class Application extends RestApplication {
+import {ApplicationConfig} from '@loopback/core';
+import {RestApplication, RestServer} from '@loopback/rest';
+export {ApplicationConfig};
+
+export class HelloWorldApplication extends RestApplication {
   constructor(options: ApplicationConfig = {}) {
     super(options);
-    this.projectRoot = __dirname;
-    this.controller(PingController);
-    this.bind(RestExplorerBindings.CONFIG).to({
-      path: '/explorer',
+
+    // In this example project, we configure a sequence that always
+    // returns the same HTTP response: Hello World!
+    // Learn more about the concept of Sequence in our docs:
+    //   http://loopback.io/doc/en/lb4/Sequence.html
+    this.handler(({response}, sequence) => {
+      sequence.send(response, 'Hello World!');
     });
   }
-}
 
+  async start() {
+    await super.start();
+
+    if (!this.options?.disableConsoleLog) {
+      const rest = await this.getServer(RestServer);
+      console.log(
+        `REST server running on port: ${await rest.get('rest.port')}`,
+      );
+    }
+  }
+}
