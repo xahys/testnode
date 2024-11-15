@@ -1,13 +1,16 @@
-// Copyright IBM Corp. and LoopBack contributors 2018,2020. All Rights Reserved.
-// Node module: @loopback/example-hello-world
-// This file is licensed under the MIT License.
-// License text available at https://opensource.org/licenses/MIT
+import {ApplicationConfig, Loopback4ExampleGithubApplication} from './application';
 
-import {ApplicationConfig, HelloWorldApplication} from './application';
+export * from './application';
 
-export async function main(config: ApplicationConfig) {
-  const app = new HelloWorldApplication();
+export async function main(options: ApplicationConfig = {}) {
+  const app = new Loopback4ExampleGithubApplication(options);
+  await app.boot();
   await app.start();
+
+  const url = app.restServer.url;
+  console.log(`Server is running at ${url}`);
+  console.log(`Try ${url}/ping`);
+
   return app;
 }
 
@@ -16,7 +19,13 @@ if (require.main === module) {
   const config = {
     rest: {
       port: +(process.env.PORT ?? 3000),
-      host: process.env.HOST ?? 'localhost',
+      host: process.env.HOST,
+      // The `gracePeriodForClose` provides a graceful close for http/https
+      // servers with keep-alive clients. The default value is `Infinity`
+      // (don't force-close). If you want to immediately destroy all sockets
+      // upon stop, set its value to `0`.
+      // See https://www.npmjs.com/package/stoppable
+      gracePeriodForClose: 5000, // 5 seconds
       openApiSpec: {
         // useful when used with OpenAPI-to-GraphQL to locate your application
         setServersFromRequest: true,

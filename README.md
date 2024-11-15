@@ -1,74 +1,92 @@
-# @loopback/example-hello-world
+# loopback4-example-github
 
-A simple hello-world application using LoopBack 4!
+This LoopBack application is an example to connect to third party REST APIs, GitHub API.
 
-## Summary
+It shows:
 
-This project shows how to write the simplest LoopBack 4 application possible.
-Check out
-[src/application.ts](https://github.com/loopbackio/loopback-next/blob/master/examples/hello-world/src/application.ts)
-to learn how we configured our application to always respond with "Hello
-World!".
+- how to define template and options in [REST connector datasource](./src/datasources/githubds.datasource.ts).
+- how to traverse pages in the results in the [controller](./src/controllers/gh-query.controller.ts)
 
-## Prerequisites
+## Blog posts
 
-Before we can begin, you'll need to make sure you have some things installed:
+I'll be creating a series of blog posts on how to create this end-to-end, i.e. from creating APIs in LoopBack application to frontend using React. Stay tuned!
 
-- [Node.js](https://nodejs.org/en/) at v10 or greater
+- [Part 1: Creating Datasource to GitHub API](https://mobilediana.medium.com/building-an-end-to-end-application-with-loopback-react-js-7a22d726c35d)
+- [Part 2: Creating Service Proxy](https://mobilediana.medium.com/building-an-end-to-end-application-with-loopback-react-js-part-2-creating-service-proxy-7ffac2bd7980)
+- [Part 3: Pagination in GitHub API Results](https://mobilediana.medium.com/building-an-end-to-end-application-with-loopback-react-js-90cfd7a4813c#a270-8107da706e6f)
 
-Additionally, this tutorial assumes that you are comfortable with certain
-technologies, languages and concepts.
+---
 
-- JavaScript (ES6)
-- [npm](https://www.npmjs.com/)
-- [REST](https://en.wikipedia.org/wiki/Representational_state_transfer)
+This application is generated using [LoopBack 4 CLI](https://loopback.io/doc/en/lb4/Command-line-interface.html) with the
+[initial project layout](https://loopback.io/doc/en/lb4/Loopback-application-layout.html).
 
-## Installation
+## Install dependencies
 
-1.  Install the new loopback CLI toolkit.
+By default, dependencies were installed when this application was generated.
+Whenever dependencies in `package.json` are changed, run the following command:
 
 ```sh
-npm i -g @loopback/cli
+npm install
 ```
 
-2.  Download the "hello-world" application.
+To only install resolved dependencies in `package-lock.json`:
 
 ```sh
-lb4 example hello-world
+npm ci
 ```
 
-3.  Switch to the directory.
-
-```sh
-cd loopback4-example-hello-world
-```
-
-## Use
-
-Start the app:
+## Run the application
 
 ```sh
 npm start
 ```
 
-The application will start on port `3000`. Use your favourite browser or REST
-client to access any path with a GET request, and watch it return
-`Hello world!`.
+You can also run `node .` to skip the build step.
 
-## Contributions
+Open http://127.0.0.1:3000 in your browser.
 
-- [Guidelines](https://github.com/loopbackio/loopback-next/blob/master/docs/CONTRIBUTING.md)
-- [Join the team](https://github.com/loopbackio/loopback-next/issues/110)
+## Rebuild the project
+
+To incrementally build the project:
+
+```sh
+npm run build
+```
+
+To force a full build by cleaning up cached artifacts:
+
+```sh
+npm run rebuild
+```
+
+## Fix code style and formatting issues
+
+```sh
+npm run lint
+```
+
+To automatically fix such issues:
+
+```sh
+npm run lint:fix
+```
+
+## Other useful commands
+
+- `npm run migrate`: Migrate database schemas for models
+- `npm run openapi-spec`: Generate OpenAPI spec into a file
+- `npm run docker:build`: Build a Docker image for this application
+- `npm run docker:run`: Run this application inside a Docker container
 
 ## Tests
 
-Run `npm test` from the root folder.
+```sh
+npm test
+```
 
-## Contributors
+## What's next
 
-See
-[all contributors](https://github.com/loopbackio/loopback-next/graphs/contributors).
+Please check out [LoopBack 4 documentation](https://loopback.io/doc/en/lb4/) to
+understand how you can continue to add features to this application.
 
-## License
-
-MIT
+[![LoopBack](<https://github.com/strongloop/loopback-next/raw/master/docs/site/imgs/branding/Powered-by-LoopBack-Badge-(blue)-@2x.png>)](http://loopback.io/)

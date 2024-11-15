@@ -1,33 +1,44 @@
-// Copyright IBM Corp. and LoopBack contributors 2018,2020. All Rights Reserved.
-// Node module: @loopback/example-hello-world
-// This file is licensed under the MIT License.
-// License text available at https://opensource.org/licenses/MIT
-
+import {BootMixin} from '@loopback/boot';
 import {ApplicationConfig} from '@loopback/core';
-import {RestApplication, RestServer} from '@loopback/rest';
+import {
+  RestExplorerBindings,
+  RestExplorerComponent,
+} from '@loopback/rest-explorer';
+import {RepositoryMixin} from '@loopback/repository';
+import {RestApplication} from '@loopback/rest';
+import {ServiceMixin} from '@loopback/service-proxy';
+import path from 'path';
+import {MySequence} from './sequence';
+
 export {ApplicationConfig};
 
-export class HelloWorldApplication extends RestApplication {
+export class Loopback4ExampleGithubApplication extends BootMixin(
+  ServiceMixin(RepositoryMixin(RestApplication)),
+) {
   constructor(options: ApplicationConfig = {}) {
     super(options);
 
-    // In this example project, we configure a sequence that always
-    // returns the same HTTP response: Hello World!
-    // Learn more about the concept of Sequence in our docs:
-    //   http://loopback.io/doc/en/lb4/Sequence.html
-    this.handler(({response}, sequence) => {
-      sequence.send(response, 'Hello World!');
+    // Set up the custom sequence
+    this.sequence(MySequence);
+
+    // Set up default home page
+    this.static('/', path.join(__dirname, '../public'));
+
+    // Customize @loopback/rest-explorer configuration here
+    this.configure(RestExplorerBindings.COMPONENT).to({
+      path: '/explorer',
     });
-  }
+    this.component(RestExplorerComponent);
 
-  async start() {
-    await super.start();
-
-    if (!this.options?.disableConsoleLog) {
-      const rest = await this.getServer(RestServer);
-      console.log(
-        `REST server running on port: ${await rest.get('rest.port')}`,
-      );
-    }
+    this.projectRoot = __dirname;
+    // Customize @loopback/boot Booter Conventions here
+    this.bootOptions = {
+      controllers: {
+        // Customize ControllerBooter Conventions here
+        dirs: ['controllers'],
+        extensions: ['.controller.js'],
+        nested: true,
+      },
+    };
   }
 }
